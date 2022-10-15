@@ -21,9 +21,14 @@ body {
 
 #search-box:focus,
 #search-box:hover {
-  border-color: blue;
+  border-color: #0000ff;
 }
 
-.country-list {
+ul {
   list-style: none;
+}
+
+.country-list__item {
+  display: flex;
+  align-items: center;
 }
