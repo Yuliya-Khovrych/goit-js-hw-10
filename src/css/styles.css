@@ -23,3 +23,7 @@ body {
 #search-box:hover {
   border-color: blue;
 }
+
+.country-list {
+  list-style: none;
+}
