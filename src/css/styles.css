@@ -10,6 +10,7 @@ body {
   background-color: #fafafa;
   color: #212121;
   line-height: 1.5;
+  background-image: linear-gradient(to right, #fddb92, #d1fdff);
 }
 
 #search-box {
@@ -17,11 +18,13 @@ body {
   padding: 8px;
   max-width: 320px;
   margin-bottom: 16px;
+  border-radius: 5px;
+  border-color: #ffff;
 }
 
 #search-box:focus,
 #search-box:hover {
-  border-color: #0000ff;
+  border-color: #558823;
 }
 
 ul {
@@ -31,4 +34,8 @@ ul {
 .country-list__item {
   display: flex;
   align-items: center;
+}
+
+.country-list__flag {
+  margin-right: 10px;
 }

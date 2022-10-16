@@ -6,13 +6,14 @@ import debounce from 'lodash.debounce';
 const DEBOUNCE_DELAY = 300;
 
 const countryName = document.querySelector('#search-box');
-console.log(countryName);
+//console.log(countryName);
 const countryList = document.querySelector('.country-list');
 const countryInfo = document.querySelector('.country-info');
 
 countryName.addEventListener('input', debounce(onInputCountry, DEBOUNCE_DELAY));
 
-function onInputCountry() {
+function onInputCountry(evt) {
+  evt.preventDefault();
   const name = countryName.value.trim();
   if (name === '') {
     return (countryList.innerHTML = ''), (countryInfo.innerHTML = '');
@@ -22,6 +23,12 @@ function onInputCountry() {
     .then(countries => {
       countryList.innerHTML = '';
       countryInfo.innerHTML = '';
+      if (countries.length >= 10) {
+        Notiflix.Notify.info(
+          'Too many matches found. Please enter a more specific name.'
+        );
+        return;
+      }
       if (countries.length === 1) {
         countryList.insertAdjacentHTML(
           'beforeend',
@@ -31,18 +38,19 @@ function onInputCountry() {
           'beforeend',
           renderCountryInfo(countries)
         );
-      } else if (countries.length >= 10) {
-        Notiflix.Notify.info(
-          'Too many matches found. Please enter a more specific name.'
-        );
       } else {
+        countryInfo.innerHTML = '';
         countryList.insertAdjacentHTML(
           'beforeend',
           renderCountryList(countries)
         );
       }
     })
-    .catch(Notiflix.Notify.failure('Oops, there is no country with that name'));
+    .catch(error => {
+      Notiflix.Notify.failure('Oops, there is no country with that name');
+      countryList.innerHTML = '';
+      countryInfo.innerHTML = '';
+    });
 }
 
 function renderCountryList(countries) {
@@ -51,7 +59,7 @@ function renderCountryList(countries) {
       return `
           <li class="country-list__item">
               <img class="country-list__flag" src="${flags.svg}" alt="Flag of ${name.official}" width = 50px height = auto>
-              <h2 class="country-list__name">${name.official}</h2>
+              <h2>${name.official}</h2>
           </li>
           `;
     })
@@ -64,11 +72,11 @@ function renderCountryInfo(countries) {
     .map(({ capital, population, languages }) => {
       return `
         <ul class="country-info__list">
-            <li class="country-info__item"><p><b>Capital: </b>${capital}</p></li>
-            <li class="country-info__item"><p><b>Population: </b>${population}</p></li>
-            <li class="country-info__item"><p><b>Languages: </b>${Object.values(
-              languages
-            ).join(', ')}</p></li>
+            <li><p><b>Capital: </b>${capital}</p></li>
+            <li><p><b>Population: </b>${population}</p></li>
+            <li><p><b>Languages: </b>${Object.values(languages).join(
+              ', '
+            )}</p></li>
         </ul>
         `;
     })
